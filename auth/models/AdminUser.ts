@@ -34,11 +34,12 @@ AdminUser.init(
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true,
+      primaryKey: true
     },
     fullName: {
       type: DataTypes.STRING(200),
       allowNull: false,
+      field: 'full_name' // Maps to `full_name` in DB
     },
     email: {
       type: DataTypes.STRING(200),
@@ -48,36 +49,37 @@ AdminUser.init(
     username: {
       type: DataTypes.STRING(200),
       allowNull: false,
-      unique: true,
+      unique: true
     },
     contactNo: {
       type: DataTypes.STRING(200),
       allowNull: true,
+      field: 'contact_no' // Maps to `contact_no` in DB
     },
     password: {
       type: DataTypes.STRING(200),
-      allowNull: false,
+      allowNull: false
     },
     city: {
       type: DataTypes.STRING(200),
-      allowNull: false,
+      allowNull: false
     },
     popup: {
       type: DataTypes.STRING(200),
-      allowNull: true,
+      allowNull: true
     },
     privilege: {
       type: DataTypes.TEXT,
-      allowNull: true,
+      allowNull: true
     },
     status: {
       type: DataTypes.ENUM('0', '1'),
-      allowNull: false,
+      allowNull: false
     },
   },
   {
     sequelize,
-    tableName: 'clear_adminuser',
+    tableName: 'clear_adminuser', // Ensure correct table name
     timestamps: false
   }
 );

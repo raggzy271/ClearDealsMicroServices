@@ -7,7 +7,7 @@ export const generateOTP = (): string => {
 export const sendOTP = async (phoneNumber: string, otp: string): Promise<boolean> => {
   try {
     const params = {
-      Message: `Your OTP code is: ${otp}`,
+      Message: `Your OTP for Clear Deals Admin is: ${otp}. Do not share with anyone.`,
       PhoneNumber: phoneNumber,
     };
 
