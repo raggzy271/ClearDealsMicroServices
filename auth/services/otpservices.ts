@@ -1,0 +1,20 @@
+import sns from "../config/aws";
+
+export const generateOTP = (): string => {
+  return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
+};
+
+export const sendOTP = async (phoneNumber: string, otp: string): Promise<boolean> => {
+  try {
+    const params = {
+      Message: `Your OTP code is: ${otp}`,
+      PhoneNumber: phoneNumber,
+    };
+
+    await sns.publish(params).promise();
+    return true;
+  } catch (error) {
+    console.error("Error sending OTP:", error);
+    return false;
+  }
+};
