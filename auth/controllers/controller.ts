@@ -67,8 +67,12 @@ export const verifyLoginOtp = async (req: Request, res: Response): Promise<void>
       res.status(400).json({ success: false, message: "Invalid OTP" });
       return;
     }
-
-    res.status(200).json({ success: true, message: "Login successful" });
+    const { username, id, privilege } = adminLogin.user;
+    res.status(200).json({
+      success: true, message: "Login successful", user: {
+        username, id, privilege
+      }
+    });
   } catch (error) {
     console.error("OTP verification error:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
