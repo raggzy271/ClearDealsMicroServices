@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import sequelize from './config/db';
 import cors from "cors";
@@ -6,11 +9,14 @@ import session from "express-session";
 import router from "./routes/router";
 
 const app = express();
-
 app.use(cors());
 app.use(helmet());
 app.use(express.json());
-app.use(session({ secret: "your-secret-key", resave: false, saveUninitialized: true }));
+app.use(session({
+  secret: process.env.SESSION_SECRET || "fallback-secret",
+  resave: false,
+  saveUninitialized: true
+}));
 app.use("/auth", router);
 
 const PORT = process.env.PORT || 3000;
