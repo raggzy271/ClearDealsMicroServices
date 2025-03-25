@@ -1,17 +1,21 @@
 import dotenv from 'dotenv';
-dotenv.config();
-
 import express from 'express';
-import sequelize from './config/db';
 import cors from "cors";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import session from "express-session";
+
+import sequelize from './config/db';
 import router from "./routes/router";
 
+// Load environment variables from .env file
+dotenv.config();
+
 const app = express();
+app.use(express.json());
 app.use(cors());
 app.use(helmet());
-app.use(express.json());
+app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_SECRET || "fallback-secret",
   resave: false,
