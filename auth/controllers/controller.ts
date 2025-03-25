@@ -63,7 +63,7 @@ export const verifyLoginOtp = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    if (otp !== adminLogin.otp) {
+    if (String(otp) !== adminLogin.otp) {
       res.status(400).json({ success: false, message: "Invalid OTP" });
       return;
     }
