@@ -1,4 +1,7 @@
+// Load environment variables from .env file
 import dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 import cors from "cors";
 import helmet from "helmet";
@@ -7,9 +10,6 @@ import session from "express-session";
 
 import sequelize from './config/db';
 import router from "./routes/router";
-
-// Load environment variables from .env file
-dotenv.config();
 
 const app = express();
 app.use(express.json());
