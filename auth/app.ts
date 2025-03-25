@@ -19,7 +19,13 @@ app.use(cookieParser());
 app.use(session({
   secret: process.env.SESSION_SECRET || "fallback-secret",
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false,
+  cookie: {
+    secure: false,
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 86400000
+  }
 }));
 app.use("/auth", router);
 
