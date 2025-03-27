@@ -9,7 +9,6 @@ import cookieParser from "cookie-parser";
 import * as expressSession from "express-session";
 const session = expressSession.default || expressSession;
 import MySQLStore from "express-mysql-session";
-
 import sequelize from './config/db';
 import router from "./routes/router";
 
@@ -26,6 +25,9 @@ const sessionStore = new MySQLStoreClass({
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'session_db',
+  createDatabaseTable: true, // Ensure table is created if missing
+  clearExpired: true,        // Cleanup expired sessions
+  checkExpirationInterval: 900000 // 15 mins
 });
 
 app.use(session({
@@ -42,25 +44,7 @@ app.use(session({
   }
 }));
 
-app.use((req, res, next) => {
-  console.log('Session ID:', req.sessionID);
-  console.log('Session Data:', req.session);
-  // console.log('Session Store:', req.sessionStore);
-  // console.log('Cookies', req.cookies);
-  // console.log('Session Cookies', req.session.cookie);
-  next();
-});
-
 app.use("/auth", router);
-
-app.use((req, res, next) => {
-  console.log('Session ID:', req.sessionID);
-  console.log('Session Data:', req.session);
-  // console.log('Session Store:', req.sessionStore);
-  // console.log('Cookies', req.cookies);
-  // console.log('Session Cookies', req.session.cookie);
-  next();
-});
 
 const PORT = process.env.PORT || 3000;
 
