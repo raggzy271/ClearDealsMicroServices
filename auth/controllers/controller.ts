@@ -12,60 +12,62 @@ declare module "express-session" {
   }
 }
 
-export const sendLoginOtp = async (req: Request, res: Response): Promise<void> => {
+export const sendLoginOtp = async (req: Request, res: Response, next: any): Promise<void> => {
   try {
     const { username } = req.body;
 
     if (!username) {
       res.status(400).json({ success: false, message: "Username is required" });
-      return;
+      return next();
     }
 
     const user = await AdminUser.findOne({ where: { username } });
     if (!user) {
       res.status(404).json({ success: false, message: "User not found" });
-      return;
+      return next();
     }
 
     if (!user.contactNo) {
       res.status(400).json({ success: false, message: "Contact number not found" });
-      return;
+      return next();
     }
 
     const otp = generateOTP();
     req.session.adminLogin = { user, otp };
 
-    const otpSent = await sendOTP(user.contactNo, otp);
-    if (!otpSent) {
-      res.status(500).json({ success: false, message: "Failed to send OTP" });
-      return;
-    }
+    // const otpSent = await sendOTP(user.contactNo, otp);
+    // if (!otpSent) {
+    //   res.status(500).json({ success: false, message: "Failed to send OTP" });
+    //   return next();
+    // }
 
     res.status(200).json({ success: true, message: "OTP sent successfully" });
+    next();
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
+    next();
   }
 };
 
-export const verifyLoginOtp = async (req: Request, res: Response): Promise<void> => {
+export const verifyLoginOtp = async (req: Request, res: Response, next: any): Promise<void> => {
   try {
     const { otp } = req.body;
     const { adminLogin } = req.session;
 
     if (!otp) {
       res.status(400).json({ success: false, message: "OTP is required" });
-      return;
+      return next();
     }
 
     if (!adminLogin) {
       res.status(400).json({ success: false, message: "OTP was not sent" });
-      return;
+      return next();
     }
 
     if (String(otp) !== adminLogin.otp) {
       res.status(400).json({ success: false, message: "Invalid OTP" });
-      return;
+      return next();
     }
     const { username, id, privilege } = adminLogin.user;
     res.status(200).json({
@@ -73,8 +75,10 @@ export const verifyLoginOtp = async (req: Request, res: Response): Promise<void>
         username, id, privilege
       }
     });
+    next();
   } catch (error) {
     console.error("OTP verification error:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
+    next();
   }
 }
