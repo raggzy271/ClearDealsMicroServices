@@ -48,7 +48,7 @@ export const sendLoginOtp = async (req: Request, res: Response): Promise<void> =
   }
 };
 
-export const verifyLoginOtp = async (req: Request, res: Response, next: any): Promise<void> => {
+export const verifyLoginOtp = async (req: Request, res: Response): Promise<void> => {
   try {
     const { otp } = req.body;
     const { adminLogin } = req.session;
@@ -67,10 +67,10 @@ export const verifyLoginOtp = async (req: Request, res: Response, next: any): Pr
       res.status(400).json({ success: false, message: "Invalid OTP" });
       return;
     }
-    const { username, id, privilege } = adminLogin.user;
+    const { username, id, privilege, role } = adminLogin.user;
     res.status(200).json({
       success: true, message: "Login successful", user: {
-        username, id, privilege
+        username, id, privilege, role
       }
     });
   } catch (error) {

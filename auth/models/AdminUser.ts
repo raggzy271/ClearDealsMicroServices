@@ -1,6 +1,9 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import sequelize from '../config/db';
 
+const adminUserRoles = ['Super Admin', 'Data Operator', 'Relationship Manager'] as const;
+type AdminUserRole = typeof adminUserRoles[number];
+
 interface AdminUserAttributes {
   id: number;
   fullName: string;
@@ -12,6 +15,7 @@ interface AdminUserAttributes {
   popup?: string | null;
   privilege?: string | null;
   status: '0' | '1';
+  role: AdminUserRole;
 }
 
 interface AdminUserCreationAttributes extends Optional<AdminUserAttributes, 'id'> {}
@@ -27,6 +31,7 @@ class AdminUser extends Model<AdminUserAttributes, AdminUserCreationAttributes> 
   public popup!: string | null;
   public privilege!: string | null;
   public status!: '0' | '1';
+  public role!: AdminUserRole;
 }
 
 AdminUser.init(
@@ -76,6 +81,10 @@ AdminUser.init(
       type: DataTypes.ENUM('0', '1'),
       allowNull: false
     },
+    role: {
+      type: DataTypes.ENUM(...adminUserRoles),
+      allowNull: false,
+    }
   },
   {
     sequelize,
